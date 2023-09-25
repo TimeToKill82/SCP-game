@@ -11,7 +11,9 @@ public class WeaponControl : MonoBehaviour
     public GameObject gun;
     Vector3 X2 = new Vector3(2,2,2);
     public float bulletVelocity;
-    public Vector3 gravity = new Vector3(0f,-9.8f,0f);
+    public float timeBetweenStages = 0.0001f;
+    public float bulletGravity = 1f;
+    public Vector3 gravity;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,7 @@ public class WeaponControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        gravity = new Vector3(0f, bulletGravity, 0f);
     }
 
     public void shoot()
@@ -44,12 +46,14 @@ public class WeaponControl : MonoBehaviour
             {
                 Debug.Log("hit");
                 processDamage();
+                Destroy(grah);
                 yield break;
             }
             grah.transform.position = rayStart + rayDir;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            yield return new WaitForSeconds(0.0001f);
+            rayDir.y -= bulletGravity;
+            yield return new WaitForSeconds(timeBetweenStages);
         }
     }
 
