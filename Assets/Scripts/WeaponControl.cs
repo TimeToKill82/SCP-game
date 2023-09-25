@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponControl : MonoBehaviour
@@ -7,9 +8,10 @@ public class WeaponControl : MonoBehaviour
 
     public GameObject rayStartRef;
     public GameObject shootDirRef;
+    public GameObject gun;
     Vector3 X2 = new Vector3(2,2,2);
     public float bulletVelocity;
-    public float gravity = -9.8f;
+    public Vector3 gravity = new Vector3(0f,-9.8f,0f);
     // Start is called before the first frame update
     void Start()
     {
@@ -29,33 +31,25 @@ public class WeaponControl : MonoBehaviour
 
     IEnumerator processShoot()
     {
-        Vector3 shootVector;
-        Vector3 stageLength;
-        Vector3 finalTarget;
-        Vector3 finalDir;
+        Vector3 rayDir;
         Vector3 rayStart;
-        Vector3 shootDir;
-        Vector3 shootTempDir;
-        shootVector = rayStartRef.transform.position - shootDirRef.transform.position;
+        GameObject grah = new GameObject();
+        grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
+        rayDir = grah.transform.forward;
         while (true)
         {
-            stageLength = shootVector * bulletVelocity;
-            finalTarget = stageLength;
-            //finalTarget.y += gravity;
-            finalDir = rayStart - finalTarget;
-            Debug.DrawRay(rayStart, finalTarget, Color.red, 10);
-            Debug.Log("Shoot Performed");
-            if (Physics.Raycast(rayStart, finalDir, Vector3.Distance(rayStart, finalTarget)))
+            Debug.DrawRay(rayStart, rayDir, Color.red, 5);
+            if (Physics.Raycast(rayStart, rayDir, bulletVelocity))
             {
-                Debug.Log("ray Hit");
+                Debug.Log("hit");
+                processDamage();
                 yield break;
             }
-            yield return new WaitForSeconds(5f);
-            shootTempDir = shootVector * bulletVelocity;
-            shootDir = shootTempDir * 2;
-            rayStart = finalTarget;
-            shootVector = rayStart - shootDir;
+            grah.transform.position = rayStart + rayDir;
+            rayStart = grah.transform.position;
+            rayDir = grah.transform.forward;
+            yield return new WaitForSeconds(0.0001f);
         }
     }
 
