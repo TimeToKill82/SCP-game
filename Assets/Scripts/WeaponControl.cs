@@ -52,7 +52,7 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            rayDir.y -= bulletGravity;
+            grah.transform.Rotate(2,0,0);
             yield return new WaitForSeconds(timeBetweenStages);
         }
     }
