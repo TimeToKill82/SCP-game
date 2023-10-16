@@ -60,11 +60,16 @@ public class WeaponControl : MonoBehaviour
                 {
                     endHit = initialHit + (rayDir.normalized * measureSectionLength);
                     Collider[] hitColliders = Physics.OverlapSphere(endHit, 0f);
+                    if(hitColliders.Length > 0)
+                    {
+                        Debug.Log("puuuurrrrrrrrr");
+                    }
                     if(hitColliders.Length == 0)
                     {
                         measureFinished = true;
                         objectThickness = Vector3.Distance(initialHit, endHit);
                     }
+                    yield return new WaitForSeconds(0.0000001f);
                 }
                 //Destroy(grah);
                 Debug.Log(objectThickness);
