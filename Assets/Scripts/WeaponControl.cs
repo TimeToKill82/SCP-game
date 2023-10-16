@@ -9,10 +9,10 @@ public class WeaponControl : MonoBehaviour
     public GameObject rayStartRef;
     public GameObject shootDirRef;
     public GameObject gun;
-    Vector3 X2 = new Vector3(2,2,2);
     public float bulletVelocity;
     public float timeBetweenStages = 0.0001f;
     public float bulletGravity = 1f;
+    public float measureSectionLength = 0.0000001f;
     public Vector3 gravity;
     // Start is called before the first frame update
     void Start()
@@ -35,6 +35,11 @@ public class WeaponControl : MonoBehaviour
     {
         Vector3 rayDir;
         Vector3 rayStart;
+        Vector3 initialHit;
+        Vector3 endHit;
+        RaycastHit hitInfo;
+        float objectThickness = 0;
+        bool measureFinished;
         GameObject grah = new GameObject();
         grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
@@ -42,11 +47,27 @@ public class WeaponControl : MonoBehaviour
         while (true)
         {
             Debug.DrawRay(rayStart, rayDir, Color.red, 5);
-            if (Physics.Raycast(rayStart, rayDir, bulletVelocity))
+            if (Physics.Raycast(rayStart, rayDir,out hitInfo, bulletVelocity))
             {
                 Debug.Log("hit");
-                processDamage();
-                Destroy(grah);
+                if (hitInfo.transform.gameObject.tag == "DamageAble")
+                {
+                    processDamage();
+                }
+                measureFinished = false;
+                initialHit = hitInfo.point;
+                while(measureFinished == false)
+                {
+                    endHit = initialHit + (rayDir.normalized * measureSectionLength);
+                    Collider[] hitColliders = Physics.OverlapSphere(endHit, 0f);
+                    if(hitColliders.Length == 0)
+                    {
+                        measureFinished = true;
+                        objectThickness = Vector3.Distance(initialHit, endHit);
+                    }
+                }
+                //Destroy(grah);
+                Debug.Log(objectThickness);
                 yield break;
             }
             grah.transform.position = rayStart + rayDir;
