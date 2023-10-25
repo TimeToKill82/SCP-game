@@ -5,26 +5,13 @@ using UnityEngine;
 
 public class WeaponControl : MonoBehaviour
 {
-
     public GameObject rayStartRef;
     public GameObject shootDirRef;
     public GameObject gun;
     public float bulletVelocity;
     public float timeBetweenStages = 0.0001f;
     public float bulletGravity = 1f;
-    public float measureSectionLength = 0.0000001f;
-    public Vector3 gravity;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        gravity = new Vector3(0f, bulletGravity, 0f);
-    }
+    public float measureSectionLength = 1f;
 
     public void shoot()
     {
@@ -33,6 +20,7 @@ public class WeaponControl : MonoBehaviour
 
     IEnumerator processShoot()
     {
+        //declaring local variables so there can be multiple bullets at once
         Vector3 rayDir;
         Vector3 rayStart;
         Vector3 initialHit;
@@ -41,44 +29,59 @@ public class WeaponControl : MonoBehaviour
         float objectThickness = 0;
         bool measureFinished;
         GameObject grah = new GameObject();
+        //setting the locations and values of vector3s / gameobjects
         grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
         rayDir = grah.transform.forward;
+        //main while loop
         while (true)
         {
+            //draw ray for debug and if statement with raycast code
             Debug.DrawRay(rayStart, rayDir, Color.red, 5);
             if (Physics.Raycast(rayStart, rayDir,out hitInfo, bulletVelocity))
             {
+                //damage ang debug
                 Debug.Log("hit");
                 if (hitInfo.transform.gameObject.tag == "DamageAble")
                 {
                     processDamage();
                 }
+                //start of measure system for bullet pen
+                //declaring values and some debug
                 measureFinished = false;
                 initialHit = hitInfo.point;
+                //main measure loop
                 while(measureFinished == false)
                 {
+                    //Debug.Log(measureFinished);
+                    //moving point for measure think "extending the tapemeasure"
                     endHit = initialHit + (rayDir.normalized * measureSectionLength);
+                    //debug stuff
+                    grah.transform.position = endHit;
+                    //Debug.Log(endHit);
+                    //declares and sets colliders used to figure out if the point(end of tape measure) is in an object
                     Collider[] hitColliders = Physics.OverlapSphere(endHit, 0f);
-                    if(hitColliders.Length > 0)
+                    //checks if point(end of tape measure) is in an object
+                    if(hitColliders.Length <= 0)
                     {
-                        Debug.Log("puuuurrrrrrrrr");
-                    }
-                    if(hitColliders.Length == 0)
-                    {
+                        //sets the bool that controls loop to true and sets object thickness output
                         measureFinished = true;
                         objectThickness = Vector3.Distance(initialHit, endHit);
                     }
+                    //wait for x seconds so that unity doesnt crash
                     yield return new WaitForSeconds(0.0000001f);
                 }
-                //Destroy(grah);
+                //destroys object, prints thickness output and stops coroutine
+                Destroy(grah);
                 Debug.Log(objectThickness);
                 yield break;
             }
+            //prepares values for next cycle of loop
             grah.transform.position = rayStart + rayDir;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
             grah.transform.Rotate(2,0,0);
+            //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(timeBetweenStages);
         }
     }
