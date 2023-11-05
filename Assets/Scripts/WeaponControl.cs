@@ -11,7 +11,7 @@ public class WeaponControl : MonoBehaviour
     public float bulletVelocity;
     public float timeBetweenStages = 0.5f;
     public float bulletGravity = 1f;
-    public float measureSectionLength = 0.0001f;
+    private float measureSectionLength = 0.001f;
 
     public void shoot()
     {
@@ -50,13 +50,13 @@ public class WeaponControl : MonoBehaviour
                 //declaring values and some debug
                 measureFinished = false;
                 initialHit = hitInfo.point;
-                endHit = initialHit + (rayDir * measureSectionLength);
+                endHit = initialHit + (rayDir.normalized * measureSectionLength);
                 //main measure loop
                 while (measureFinished == false)
                 {
                     //Debug.Log(measureFinished);
                     //moving point for measure think "extending the tapemeasure"
-                    endHit = endHit + (rayDir * measureSectionLength);
+                    endHit = endHit + (rayDir.normalized * measureSectionLength);
                     //debug stuff
                     grah.transform.position = endHit;
                     //Debug.Log(endHit);
@@ -71,7 +71,7 @@ public class WeaponControl : MonoBehaviour
                         objectThickness = Vector3.Distance(initialHit, endHit);
                     }
                     //wait for x seconds so that unity doesnt crash
-                    yield return new WaitForSeconds(0.01f);
+                    //yield return new WaitForSeconds(0.0001f);
                 }
                 //destroys object, prints thickness output and stops coroutine
                 //Destroy(grah);
