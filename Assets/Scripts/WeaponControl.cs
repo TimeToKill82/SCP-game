@@ -9,9 +9,9 @@ public class WeaponControl : MonoBehaviour
     public GameObject shootDirRef;
     public GameObject gun;
     public float bulletVelocity;
-    public float timeBetweenStages = 0.0001f;
+    public float timeBetweenStages = 0.5f;
     public float bulletGravity = 1f;
-    public float measureSectionLength = 1f;
+    public float measureSectionLength = 0.0001f;
 
     public void shoot()
     {
@@ -24,7 +24,7 @@ public class WeaponControl : MonoBehaviour
         Vector3 rayDir;
         Vector3 rayStart;
         Vector3 initialHit;
-        Vector3 endHit;
+        Vector3 endHit = new Vector3(0,0,0);
         RaycastHit hitInfo;
         float objectThickness = 0;
         bool measureFinished;
@@ -50,29 +50,33 @@ public class WeaponControl : MonoBehaviour
                 //declaring values and some debug
                 measureFinished = false;
                 initialHit = hitInfo.point;
+                endHit = initialHit + (rayDir * measureSectionLength);
                 //main measure loop
-                while(measureFinished == false)
+                while (measureFinished == false)
                 {
                     //Debug.Log(measureFinished);
                     //moving point for measure think "extending the tapemeasure"
-                    endHit = initialHit + (rayDir.normalized * measureSectionLength);
+                    endHit = endHit + (rayDir * measureSectionLength);
                     //debug stuff
                     grah.transform.position = endHit;
                     //Debug.Log(endHit);
                     //declares and sets colliders used to figure out if the point(end of tape measure) is in an object
                     Collider[] hitColliders = Physics.OverlapSphere(endHit, 0f);
+                    //Debug.Log(hitColliders.Length);
                     //checks if point(end of tape measure) is in an object
-                    if(hitColliders.Length <= 0)
+                    if(hitColliders.Length == 0)
                     {
                         //sets the bool that controls loop to true and sets object thickness output
                         measureFinished = true;
                         objectThickness = Vector3.Distance(initialHit, endHit);
                     }
                     //wait for x seconds so that unity doesnt crash
-                    yield return new WaitForSeconds(0.0000001f);
+                    yield return new WaitForSeconds(0.01f);
                 }
                 //destroys object, prints thickness output and stops coroutine
-                Destroy(grah);
+                //Destroy(grah);
+                Debug.Log(initialHit);
+                Debug.Log(endHit);
                 Debug.Log(objectThickness);
                 yield break;
             }
@@ -80,7 +84,11 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            grah.transform.Rotate(2,0,0);
+            if (grah.transform.rotation.x != 90 || grah.transform.rotation.x < 90)
+            {
+                grah.transform.Rotate(2, 0, 0);
+                //Debug.Log("chess");
+            }
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(timeBetweenStages);
         }
