@@ -18,7 +18,7 @@ public class WeaponControl : MonoBehaviour
         StartCoroutine(processShoot());
     }
 
-    IEnumerator processShoot()
+    private IEnumerator processShoot()
     {
         //declaring local variables so there can be multiple bullets at once
         Vector3 rayDir;
@@ -94,7 +94,7 @@ public class WeaponControl : MonoBehaviour
         }
     }
 
-    void processDamage()
+    private void processDamage()
     {
 
     }
