@@ -12,6 +12,7 @@ public class WeaponControl : MonoBehaviour
     public float timeBetweenStages = 0.5f;
     public float bulletGravity = 1f;
     private float measureSectionLength = 0.001f;
+    public float bulletPenVal;
 
     public void shoot()
     {
@@ -70,15 +71,21 @@ public class WeaponControl : MonoBehaviour
                         measureFinished = true;
                         objectThickness = Vector3.Distance(initialHit, endHit);
                     }
-                    //wait for x seconds so that unity doesnt crash
-                    //yield return new WaitForSeconds(0.0001f);
                 }
-                //destroys object, prints thickness output and stops coroutine
-                //Destroy(grah);
+                //prints debug stuff and figures out if bulleet pens or not
                 Debug.Log(initialHit);
                 Debug.Log(endHit);
                 Debug.Log(objectThickness);
-                yield break;
+                if (bulletPenVal > objectThickness)
+                {
+                    Debug.Log("Pen");
+                    yield break;
+                }
+                else
+                {
+                    Debug.Log("Non-Pen");
+                    yield break;
+                }
             }
             //prepares values for next cycle of loop
             grah.transform.position = rayStart + rayDir;
