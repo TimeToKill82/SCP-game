@@ -28,6 +28,7 @@ public class WeaponControl : MonoBehaviour
         RaycastHit hitInfo;
         float modTimeBetweenStages = timeBetweenStages;
         float modBulletPenVal = bulletPenVal;
+        float thickness = 0;
         GameObject grah = new GameObject();
         //setting the locations and values of vector3s / gameobjects
         grah.transform.rotation = gun.transform.rotation;
@@ -47,9 +48,15 @@ public class WeaponControl : MonoBehaviour
                     processDamage();
                 }
                 Debug.Log(measureThickness(hitInfo, rayDir, modBulletPenVal));
-                if (measureThickness(hitInfo, rayDir, modBulletPenVal) == false)
+                thickness = measureThickness(hitInfo, rayDir, modBulletPenVal);
+                if (measureThickness(hitInfo, rayDir, modBulletPenVal) > modBulletPenVal)
                 {
                     yield break;
+                }
+                else
+                {
+                    //timeBetweenStages = timeBetweenStages 
+                    modBulletPenVal = modBulletPenVal - thickness;
                 }
             }
             //prepares values for next cycle of loop
@@ -66,7 +73,7 @@ public class WeaponControl : MonoBehaviour
         }
     }
 
-    private bool measureThickness(RaycastHit mHitInfo, Vector3 mRayDir, float mBulletPenVal)
+    private float measureThickness(RaycastHit mHitInfo, Vector3 mRayDir, float mBulletPenVal)
     {
         Vector3 initialHit;
         Vector3 endHit = new Vector3(0, 0, 0);
@@ -93,14 +100,7 @@ public class WeaponControl : MonoBehaviour
                 objectThickness = Vector3.Distance(initialHit, endHit);
             }
         }
-        if (mBulletPenVal > objectThickness)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return objectThickness;
     }
 
     private void processDamage()
