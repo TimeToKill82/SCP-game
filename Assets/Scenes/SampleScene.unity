@@ -1198,9 +1198,9 @@ MonoBehaviour:
   rayStartRef: {fileID: 1487124807}
   shootDirRef: {fileID: 432938960}
   gun: {fileID: 1438047059}
-  bulletVelocity: 1
-  timeBetweenStages: 3
-  bulletGravity: 0.2
+  stageLength: 0.001
+  bulletGravity: 2
+  bulletPenVal: 1
 --- !u!1 &1487124807
 GameObject:
   m_ObjectHideFlags: 0
