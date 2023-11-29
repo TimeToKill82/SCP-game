@@ -9,11 +9,11 @@ public class WeaponControl : MonoBehaviour
     public GameObject rayStartRef;
     public GameObject shootDirRef;
     public GameObject gun;
-    public float stageLength = 0.001f;
+    public float stageLength = 1f;
     private float timeBetweenStages = 0.1f;
     public float bulletGravity = 2f;
     private float measureSectionLength = 0.001f;
-    public float bulletPenVal;
+    public float bulletPenVal;// 1
 
     public void shoot()
     {
@@ -57,17 +57,19 @@ public class WeaponControl : MonoBehaviour
                 {
                     //timeBetweenStages = timeBetweenStages 
                     modBulletPenVal = modBulletPenVal - thickness;
+                    modTimeBetweenStages = modBulletPenVal / 10;
                 }
             }
             //prepares values for next cycle of loop
             grah.transform.position = rayStart + rayDir.normalized * stageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            if (grah.transform.rotation.x != 90 || grah.transform.rotation.x < 90)
+            if (grah.transform.rotation.x != 0.7f || grah.transform.rotation.x > 0.9f)
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
+                Debug.Log(grah.transform.rotation.x);
                 //Debug.Log("chess");
-            }
+            } 
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(modTimeBetweenStages);
         }
