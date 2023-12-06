@@ -14,6 +14,13 @@ public class WeaponControl : MonoBehaviour
     public float bulletGravity = 2f;
     private float measureSectionLength = 0.001f;
     public float bulletPenVal;// 1
+    public GameObject globalDownRef;
+
+    private void Start()
+    {
+        Debug.DrawRay(globalDownRef.transform.position, globalDownRef.transform.forward, Color.red);
+        Debig.Log("pain");
+    }
 
     public void shoot()
     {
@@ -64,10 +71,10 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir.normalized * stageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            if (grah.transform.rotation.x != 0.7f || grah.transform.rotation.x > 0.9f)
+            if (grah.transform.forward != globalDownRef.transform.forward)
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
-                Debug.Log(grah.transform.rotation.x);
+                Debug.Log(grah.transform.localEulerAngles.x);
                 //Debug.Log("chess");
             } 
             //waits for x seconds to control bullet velocity
