@@ -35,9 +35,7 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        {
-            onFoot.Enable();
-        }
+        onFoot.Enable();   
     }
 
     private void OnDisable()
