@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class WeaponControl : MonoBehaviour
     public GameObject gun;
     public float stageLength = 1f;
     private float timeBetweenStages = 0.1f;
-    public float bulletGravity = 2f;
+    public int bulletGravity = 2;
     private float measureSectionLength = 0.001f;
     public float bulletPenVal;// 1
     public GameObject globalDownRef;
@@ -19,7 +20,7 @@ public class WeaponControl : MonoBehaviour
     private void Start()
     {
         Debug.DrawRay(globalDownRef.transform.position, globalDownRef.transform.forward, Color.red);
-        Debig.Log("pain");
+        Debug.Log("pain");
     }
 
     public void shoot()
@@ -41,6 +42,7 @@ public class WeaponControl : MonoBehaviour
         grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
         rayDir = grah.transform.forward;
+        bool rotationToggle = true;
         //main while loop
         while (true)
         {
@@ -71,12 +73,13 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir.normalized * stageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            if (grah.transform.forward != globalDownRef.transform.forward)
+            if (rotationToggle)
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
                 Debug.Log(grah.transform.localEulerAngles.x);
+                rotationToggle = rotateBullet(grah.transform.rotation.x);
                 //Debug.Log("chess");
-            } 
+            }
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(modTimeBetweenStages);
         }
@@ -110,6 +113,19 @@ public class WeaponControl : MonoBehaviour
             }
         }
         return objectThickness;
+    }
+
+    private bool rotateBullet(float rotationX)
+    {
+        for(int thing = bulletGravity; thing > 0; thing--)
+        {
+            float yes = rotationX += thing;
+            if(yes == globalDownRef.transform.rotation.x)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void processDamage()

@@ -1229,7 +1229,7 @@ MonoBehaviour:
   rayStartRef: {fileID: 1487124807}
   shootDirRef: {fileID: 432938960}
   gun: {fileID: 1438047059}
-  stageLength: 0.1
+  stageLength: 1
   bulletGravity: 2
   bulletPenVal: 1
   globalDownRef: {fileID: 1109734411}
