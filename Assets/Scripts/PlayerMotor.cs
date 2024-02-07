@@ -28,13 +28,15 @@ public class PlayerMotor : MonoBehaviour
         Vector3 moveDir = Vector3.zero;
         moveDir.x = input.x;
         moveDir.z = input.y;
-        controller.Move(transform.TransformDirection(moveDir) * speed * Time.deltaTime);
+        if (isGrounded)
+        {
+            playerVelocity = transform.TransformDirection(moveDir.x * speed, playerVelocity.y, moveDir.z * speed);
+        }
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -2;
         playerVelocity.y += gravity * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
-
     public void Jump()
     {
         if (isGrounded)

@@ -101,6 +101,10 @@ public class WeaponControl : MonoBehaviour
         }
     }
 
+    private void measureThickness()
+    {
+
+    }
     private void processDamage()
     {
 
