@@ -63,6 +63,7 @@
     <Compile Include="Assets\Input\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\WeaponControl.cs" />
     <Compile Include="Assets\Scripts\PlayerLook.cs" />
+    <Compile Include="Assets\Scripts\PlayerTeleport.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

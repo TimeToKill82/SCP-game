@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class WeaponControl : MonoBehaviour
 {
@@ -37,12 +38,13 @@ public class WeaponControl : MonoBehaviour
         float modTimeBetweenStages = timeBetweenStages;
         float modBulletPenVal = bulletPenVal;
         float thickness = 0;
+        float yes;
+        bool rotateToggle = true;
         GameObject grah = new GameObject();
         //setting the locations and values of vector3s / gameobjects
         grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
         rayDir = grah.transform.forward;
-        bool rotationToggle = true;
         //main while loop
         while (true)
         {
@@ -58,7 +60,7 @@ public class WeaponControl : MonoBehaviour
                 }
                 Debug.Log(measureThickness(hitInfo, rayDir, modBulletPenVal));
                 thickness = measureThickness(hitInfo, rayDir, modBulletPenVal);
-                if (measureThickness(hitInfo, rayDir, modBulletPenVal) > modBulletPenVal)
+                if (thickness > modBulletPenVal)
                 {
                     yield break;
                 }
@@ -73,13 +75,17 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir.normalized * stageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            if (rotationToggle)
+            if (grah.transform.rotation.x >= 80)
+            {
+                grah.transform.Rotate(findDifference(90f, grah.transform.rotation.x), 0, 0);
+                rotateToggle = false;
+            }
+            if (rotateToggle)
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
                 Debug.Log(grah.transform.localEulerAngles.x);
-                rotationToggle = rotateBullet(grah.transform.rotation.x);
-                //Debug.Log("chess");
             }
+            //Debug.Log("chess");
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(modTimeBetweenStages);
         }
@@ -115,17 +121,16 @@ public class WeaponControl : MonoBehaviour
         return objectThickness;
     }
 
-    private bool rotateBullet(float rotationX)
+    float findDifference(float inputA, float inputB)
     {
-        for(int thing = bulletGravity; thing > 0; thing--)
+        if(inputA > inputB)
         {
-            float yes = rotationX += thing;
-            if(yes == globalDownRef.transform.rotation.x)
-            {
-                return false;
-            }
+            return inputA - inputB;
         }
-        return true;
+        else
+        {
+            return inputB - inputA;
+        }
     }
 
     private void processDamage()

@@ -359,6 +359,7 @@
 "Assets/Scripts/InputManager.cs"
 "Assets/Scripts/PlayerLook.cs"
 "Assets/Scripts/PlayerMotor.cs"
+"Assets/Scripts/PlayerTeleport.cs"
 "Assets/Scripts/WeaponControl.cs"
 -langversion:9.0
 
