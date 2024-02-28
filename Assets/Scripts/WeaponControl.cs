@@ -38,7 +38,6 @@ public class WeaponControl : MonoBehaviour
         float modTimeBetweenStages = timeBetweenStages;
         float modBulletPenVal = bulletPenVal;
         float thickness = 0;
-        float yes;
         bool rotateToggle = true;
         GameObject grah = new GameObject();
         //setting the locations and values of vector3s / gameobjects
@@ -75,16 +74,16 @@ public class WeaponControl : MonoBehaviour
             grah.transform.position = rayStart + rayDir.normalized * stageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
-            if (grah.transform.rotation.x >= 80)
+            if (grah.transform.eulerAngles.x >= 88 && grah.transform.eulerAngles.x <= 92)
             {
-                grah.transform.Rotate(findDifference(90f, grah.transform.rotation.x), 0, 0);
+                grah.transform.Rotate(findDifference(90f, grah.transform.eulerAngles.x), 0, 0);
                 rotateToggle = false;
             }
             if (rotateToggle)
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
-                Debug.Log(grah.transform.localEulerAngles.x);
             }
+                Debug.Log(grah.transform.rotation.x);
             //Debug.Log("chess");
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(modTimeBetweenStages);
