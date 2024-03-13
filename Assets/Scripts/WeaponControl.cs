@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.UI;
 
 public class WeaponControl : MonoBehaviour
 {
@@ -17,11 +20,21 @@ public class WeaponControl : MonoBehaviour
     private float measureSectionLength = 0.001f;
     public float bulletPenVal;// 1
     public GameObject globalDownRef;
-
+    Dictionary<string, float> ricochetAngle = new Dictionary<string, float>();
+    //declaring dictionary to hold material modifiers
+    Dictionary<string, float> matMod = new Dictionary<string, float>();
+    
     private void Start()
     {
         Debug.DrawRay(globalDownRef.transform.position, globalDownRef.transform.forward, Color.red);
         Debug.Log("pain");
+        //assigning values for matMod
+        matMod.Add("Untagged", 0f);
+        matMod.Add("wood", 1f);
+        matMod.Add("dirt", 1.5f);
+        matMod.Add("metal", 5f);
+        //assigning values for ricochetAngle !!currently not in use!!
+        ricochetAngle.Add("wood", 1f);
     }
 
     public void shoot()
@@ -51,23 +64,38 @@ public class WeaponControl : MonoBehaviour
             Debug.DrawRay(rayStart, rayDir.normalized * stageLength, Color.red, 5);
             if (Physics.Raycast(rayStart, rayDir,out hitInfo, stageLength))
             {
-                //damage ang debug
-                Debug.Log("hit");
-                if (hitInfo.transform.gameObject.tag == "DamageAble")
-                {
-                    processDamage();
-                }
-                Debug.Log(measureThickness(hitInfo, rayDir, modBulletPenVal));
-                thickness = measureThickness(hitInfo, rayDir, modBulletPenVal);
-                if (thickness > modBulletPenVal)
-                {
-                    yield break;
+                Debug.Log(Vector3.Angle(hitInfo.normal, rayDir));
+                if (Vector3.Angle(hitInfo.normal, rayDir) < 45){
+
+                    //damage ang debug
+                    //Debug.Log("hit");
+                    if (hitInfo.transform.gameObject.tag == "DamageAble")
+                    {
+                        processDamage();
+                    }
+                    //Debug.Log(measureThickness(hitInfo, rayDir, modBulletPenVal));
+                    thickness = measureThickness(hitInfo, rayDir, modBulletPenVal);
+                    float modThickness = thickness * matMod[hitInfo.transform.gameObject.tag];
+                    //Debug.Log(modThickness);
+                    if (modThickness > modBulletPenVal)
+                    {
+                        yield break;
+                    }
+                   else if (modThickness == 0)
+                    {
+                        //way to make some things stop any bullet
+                    }
+                    else
+                    {
+                        //timeBetweenStages = timeBetweenStages 
+                        modBulletPenVal = modBulletPenVal + modThickness;
+                        modTimeBetweenStages = modBulletPenVal / 10;
+                    }
                 }
                 else
                 {
-                    //timeBetweenStages = timeBetweenStages 
-                    modBulletPenVal = modBulletPenVal - thickness;
-                    modTimeBetweenStages = modBulletPenVal / 10;
+                    //grah.transform.Rotate(Vector3.Angle(hitInfo.normal, rayDir));
+                    Debug.Log("ricochet");
                 }
             }
             //prepares values for next cycle of loop
@@ -83,7 +111,7 @@ public class WeaponControl : MonoBehaviour
             {
                 grah.transform.Rotate(bulletGravity, 0, 0);
             }
-                Debug.Log(grah.transform.rotation.x);
+            //Debug.Log(grah.transform.rotation.x);
             //Debug.Log("chess");
             //waits for x seconds to control bullet velocity
             yield return new WaitForSeconds(modTimeBetweenStages);
@@ -130,6 +158,20 @@ public class WeaponControl : MonoBehaviour
         {
             return inputB - inputA;
         }
+    }
+
+    float intFromString(string input)
+    {
+        string b = string.Empty;
+        float output = 0;
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (Char.IsDigit(input[i]))
+                b += input[i];
+        }
+        if (b.Length > 0)
+            output = float.Parse(b);
+        return output;
     }
 
     private void processDamage()

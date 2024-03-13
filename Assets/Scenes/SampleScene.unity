@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 210479563}
   m_Layer: 0
   m_Name: Cube (3)
-  m_TagString: Wood
+  m_TagString: wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 470501575}
   m_Layer: 0
   m_Name: Cube (8)
-  m_TagString: Metal
+  m_TagString: metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 493654867}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Dirt
+  m_TagString: dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -787,7 +787,7 @@ GameObject:
   - component: {fileID: 911779820}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Wood
+  m_TagString: wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -984,7 +984,7 @@ GameObject:
   - component: {fileID: 1061574256}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Dirt
+  m_TagString: dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1120,7 +1120,7 @@ GameObject:
   - component: {fileID: 1328640228}
   m_Layer: 0
   m_Name: Cube (7)
-  m_TagString: Metal
+  m_TagString: metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1542,7 +1542,7 @@ GameObject:
   - component: {fileID: 1709228777}
   m_Layer: 0
   m_Name: Cube (4)
-  m_TagString: Wood
+  m_TagString: wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1647,7 +1647,7 @@ GameObject:
   - component: {fileID: 1714208432}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Dirt
+  m_TagString: dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1870,7 +1870,7 @@ GameObject:
   - component: {fileID: 2141142574}
   m_Layer: 0
   m_Name: Cube (6)
-  m_TagString: Metal
+  m_TagString: metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
