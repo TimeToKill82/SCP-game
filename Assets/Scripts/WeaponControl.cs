@@ -23,6 +23,8 @@ public class WeaponControl : MonoBehaviour
     Dictionary<string, float> ricochetAngle = new Dictionary<string, float>();
     //declaring dictionary to hold material modifiers
     Dictionary<string, float> matMod = new Dictionary<string, float>();
+    public PlayerLook PlayerLook;
+    public float vertRecoil = 1f;
     
     private void Start()
     {
@@ -57,6 +59,7 @@ public class WeaponControl : MonoBehaviour
         grah.transform.rotation = gun.transform.rotation;
         rayStart = rayStartRef.transform.position;
         rayDir = grah.transform.forward;
+        PlayerLook.xRecoil = vertRecoil;
         //main while loop
         while (true)
         {
@@ -65,7 +68,9 @@ public class WeaponControl : MonoBehaviour
             if (Physics.Raycast(rayStart, rayDir,out hitInfo, stageLength))
             {
                 Debug.Log(Vector3.Angle(hitInfo.normal, rayDir));
-                if (Vector3.Angle(hitInfo.normal, rayDir) < 45){
+                Debug.Log(hitInfo.normal);
+                Debug.Log(rayDir);
+                if (Vector3.Angle(hitInfo.normal, rayDir) > 110){
 
                     //damage ang debug
                     //Debug.Log("hit");
@@ -94,7 +99,8 @@ public class WeaponControl : MonoBehaviour
                 }
                 else
                 {
-                    //grah.transform.Rotate(Vector3.Angle(hitInfo.normal, rayDir));
+                    grah.transform.position = hitInfo.point;
+                    grah.transform.Rotate(0, (Vector3.Angle(hitInfo.normal, rayDir) - 80),0);
                     Debug.Log("ricochet");
                 }
             }
