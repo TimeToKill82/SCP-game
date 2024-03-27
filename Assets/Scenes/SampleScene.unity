@@ -1340,6 +1340,7 @@ MonoBehaviour:
   globalDownRef: {fileID: 1109734411}
   PlayerLook: {fileID: 1570855190}
   vertRecoil: 10
+  barrelEnd: {fileID: 432938960}
 --- !u!1 &1487124807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b167e5bf71dcb8040bbbc8b96be5265e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fullAuto: 0
   weapControl: {fileID: 1438047064}
 --- !u!143 &1570855189
 CharacterController:
@@ -1529,6 +1531,8 @@ MonoBehaviour:
   cam: {fileID: 963194227}
   weapon: {fileID: 1438047059}
   xRecoil: 0
+  recoilDelay: 0.1
+  recoilSpeed: 0.01
   xSens: 30
   ySens: 30
 --- !u!1 &1709228776

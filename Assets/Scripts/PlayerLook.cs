@@ -8,6 +8,8 @@ public class PlayerLook : MonoBehaviour
     public GameObject weapon;
     private float xRotation = 0f;
     public float xRecoil = 0f;
+    public float recoilDelay = 0.5f; // delay until gun starts lowering to original firing position
+    public float recoilSpeed = 0.0000001f; // lower number = higher speed
 
     public float xSens = 30f;
     public float ySens = 30f;

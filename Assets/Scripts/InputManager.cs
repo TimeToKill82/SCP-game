@@ -8,6 +8,8 @@ public class InputManager : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerInput.OnFootActions onFoot;
 
+    public bool fullAuto;
+
     private PlayerMotor motor;
     private PlayerLook look;
     public WeaponControl weapControl;
@@ -19,7 +21,14 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
         onFoot.Jump.performed += ctx => motor.Jump();
-        onFoot.Shoot.performed += ctx => weapControl.shoot();
+        if (fullAuto == true)
+        {
+            onFoot.Shoot.performed += ctx => weapControl.shoot();
+        }
+        else
+        {
+            onFoot.Shoot.performed += ctx => weapControl.shoot();
+        }
     }
 
     // Update is called once per frame

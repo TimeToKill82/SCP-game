@@ -25,6 +25,7 @@ public class WeaponControl : MonoBehaviour
     Dictionary<string, float> matMod = new Dictionary<string, float>();
     public PlayerLook PlayerLook;
     public float vertRecoil = 1f;
+    public GameObject barrelEnd;
     
     private void Start()
     {
@@ -41,7 +42,20 @@ public class WeaponControl : MonoBehaviour
 
     public void shoot()
     {
-        StartCoroutine(processShoot());
+        Collider[] barrelCollider = Physics.OverlapSphere(barrelEnd.transform.position, 0f);
+        if (barrelCollider.Length == 0)
+            StartCoroutine(processShoot());
+    }
+
+    public void fullAutoShoot()
+    {
+        //!!!MAKE THIS A COROUTINE!!!
+        Collider[] barrelCollider = Physics.OverlapSphere(barrelEnd.transform.position, 0f);
+        if (barrelCollider.Length == 0)
+            while (true)
+            { 
+                StartCoroutine(processShoot());
+            }
     }
 
     private IEnumerator processShoot()
@@ -53,6 +67,7 @@ public class WeaponControl : MonoBehaviour
         float modTimeBetweenStages = timeBetweenStages;
         float modBulletPenVal = bulletPenVal;
         float thickness = 0;
+        float modStageLength = stageLength;
         bool rotateToggle = true;
         GameObject grah = new GameObject();
         //setting the locations and values of vector3s / gameobjects
@@ -60,52 +75,58 @@ public class WeaponControl : MonoBehaviour
         rayStart = rayStartRef.transform.position;
         rayDir = grah.transform.forward;
         PlayerLook.xRecoil = vertRecoil;
+        StartCoroutine(recoilThings());
         //main while loop
         while (true)
         {
             //draw ray for debug and if statement with raycast code
-            Debug.DrawRay(rayStart, rayDir.normalized * stageLength, Color.red, 5);
-            if (Physics.Raycast(rayStart, rayDir,out hitInfo, stageLength))
+            Debug.DrawRay(rayStart, rayDir.normalized * modStageLength, Color.red, 5);
+            if (Physics.Raycast(rayStart, rayDir,out hitInfo, modStageLength))
             {
+                /*
                 Debug.Log(Vector3.Angle(hitInfo.normal, rayDir));
                 Debug.Log(hitInfo.normal);
                 Debug.Log(rayDir);
-                if (Vector3.Angle(hitInfo.normal, rayDir) > 110){
-
+                */
+                if (Vector3.Angle(hitInfo.normal, rayDir) > 110)
+                {
                     //damage ang debug
                     //Debug.Log("hit");
                     if (hitInfo.transform.gameObject.tag == "DamageAble")
                     {
+                        //damage not implemented yet
                         processDamage();
                     }
                     //Debug.Log(measureThickness(hitInfo, rayDir, modBulletPenVal));
                     thickness = measureThickness(hitInfo, rayDir, modBulletPenVal);
                     float modThickness = thickness * matMod[hitInfo.transform.gameObject.tag];
+                    Debug.Log(modThickness);
                     //Debug.Log(modThickness);
                     if (modThickness > modBulletPenVal)
                     {
                         yield break;
                     }
-                   else if (modThickness == 0)
+                    else if (modThickness == 0)
                     {
                         //way to make some things stop any bullet
+                        yield break;
                     }
                     else
                     {
                         //timeBetweenStages = timeBetweenStages 
                         modBulletPenVal = modBulletPenVal + modThickness;
-                        modTimeBetweenStages = modBulletPenVal / 10;
+                        modStageLength = modBulletPenVal;
                     }
                 }
                 else
                 {
                     grah.transform.position = hitInfo.point;
                     grah.transform.Rotate(0, (Vector3.Angle(hitInfo.normal, rayDir) - 80),0);
-                    Debug.Log("ricochet");
+                    //Debug.Log("ricochet");
                 }
             }
             //prepares values for next cycle of loop
-            grah.transform.position = rayStart + rayDir.normalized * stageLength;
+            grah.transform.position = rayStart + rayDir.normalized * modStageLength;
             rayStart = grah.transform.position;
             rayDir = grah.transform.forward;
             if (grah.transform.eulerAngles.x >= 88 && grah.transform.eulerAngles.x <= 92)
@@ -152,6 +173,17 @@ public class WeaponControl : MonoBehaviour
             }
         }
         return objectThickness;
+    }
+
+    public IEnumerator recoilThings()
+    {
+        yield return new WaitForSeconds(PlayerLook.recoilDelay);
+        while (PlayerLook.xRecoil > 0)
+        {
+            PlayerLook.xRecoil--;
+            yield return new WaitForSeconds(PlayerLook.recoilSpeed);
+        }
+        yield break;
     }
 
     float findDifference(float inputA, float inputB)
