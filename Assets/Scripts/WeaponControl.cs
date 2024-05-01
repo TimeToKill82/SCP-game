@@ -26,6 +26,8 @@ public class WeaponControl : MonoBehaviour
     public PlayerLook PlayerLook;
     public float vertRecoil = 1f;
     public GameObject barrelEnd;
+    public bool fullAuto;
+    public float firingDelay;
     
     private void Start()
     {
@@ -43,19 +45,29 @@ public class WeaponControl : MonoBehaviour
     public void shoot()
     {
         Collider[] barrelCollider = Physics.OverlapSphere(barrelEnd.transform.position, 0f);
-        if (barrelCollider.Length == 0)
+        if (barrelCollider.Length == 0 && fullAuto == false)
             StartCoroutine(processShoot());
+        else if (barrelCollider.Length == 0 && fullAuto == true)
+            StartCoroutine(fullAutoShoot());
     }
 
-    public void fullAutoShoot()
+    public void shootStop()
+    {
+        StopCoroutine(fullAutoShoot());
+    }
+
+    public IEnumerator fullAutoShoot()
     {
         //!!!MAKE THIS A COROUTINE!!!
         Collider[] barrelCollider = Physics.OverlapSphere(barrelEnd.transform.position, 0f);
         if (barrelCollider.Length == 0)
+        {
             while (true)
-            { 
+            {
                 StartCoroutine(processShoot());
+                yield return new WaitForSeconds(firingDelay);
             }
+        }
     }
 
     private IEnumerator processShoot()
